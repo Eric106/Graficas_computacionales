@@ -1,6 +1,8 @@
+let mat4 = glMatrix.mat4
+
 var projectionMatrix;
 
-var shaderProgram, shaderVertexPositionAttribute, shaderVertexColorAttribute, 
+var shaderProgram, shaderVertexPositionAttribute, shaderVertexColorAttribute,
     shaderProjectionMatrixUniform, shaderModelViewMatrixUniform;
 
 var duration = 5000; // ms
@@ -8,7 +10,7 @@ var duration = 5000; // ms
 // Attributes: Input variables used in the vertex shader. Since the vertex shader is called on each vertex, these will be different every time the vertex shader is invoked.
 // Uniforms: Input variables for both the vertex and fragment shaders. These do not change values from vertex to vertex.
 // Varyings: Used for passing data from the vertex shader to the fragment shader. Represent information for which the shader can output different value for each vertex.
-var vertexShaderSource =    
+var vertexShaderSource =
     "    attribute vec3 vertexPos;\n" +
     "    attribute vec4 vertexColor;\n" +
     "    uniform mat4 modelViewMatrix;\n" +
@@ -27,43 +29,36 @@ var vertexShaderSource =
 // - highp for vertex positions,
 // - mediump for texture coordinates,
 // - lowp for colors.
-var fragmentShaderSource = 
+var fragmentShaderSource =
     "    precision lowp float;\n" +
     "    varying vec4 vColor;\n" +
     "    void main(void) {\n" +
     "    gl_FragColor = vColor;\n" +
     "}\n";
 
-function initWebGL(canvas)
-{
+function initWebGL(canvas) {
     var gl = null;
     var msg = "Your browser does not support WebGL, " +
         "or it is not enabled by default.";
-    try 
-    {
+    try {
         gl = canvas.getContext("experimental-webgl");
-    } 
-    catch (e)
-    {
+    } catch (e) {
         msg = "Error creating WebGL Context!: " + e.toString();
     }
 
-    if (!gl)
-    {
+    if (!gl) {
         alert(msg);
         throw new Error(msg);
     }
 
-    return gl;        
- }
+    return gl;
+}
 
-function initViewport(gl, canvas)
-{
+function initViewport(gl, canvas) {
     gl.viewport(0, 0, canvas.width, canvas.height);
 }
 
-function initGL(canvas)
-{
+function initGL(canvas) {
     // Create a project matrix with 45 degree field of view
     projectionMatrix = mat4.create();
     mat4.perspective(projectionMatrix, Math.PI / 4, canvas.width / canvas.height, 1, 10000);
@@ -71,8 +66,7 @@ function initGL(canvas)
 
 // TO DO: Create the functions for each of the figures.
 
-function createShader(gl, str, type)
-{
+function createShader(gl, str, type) {
     var shader;
     if (type == "fragment") {
         shader = gl.createShader(gl.FRAGMENT_SHADER);
@@ -93,8 +87,7 @@ function createShader(gl, str, type)
     return shader;
 }
 
-function initShader(gl)
-{
+function initShader(gl) {
     // load and compile the fragment and vertex shader
     var fragmentShader = createShader(gl, fragmentShaderSource, "fragment");
     var vertexShader = createShader(gl, vertexShaderSource, "vertex");
@@ -111,7 +104,7 @@ function initShader(gl)
 
     shaderVertexColorAttribute = gl.getAttribLocation(shaderProgram, "vertexColor");
     gl.enableVertexAttribArray(shaderVertexColorAttribute);
-    
+
     shaderProjectionMatrixUniform = gl.getUniformLocation(shaderProgram, "projectionMatrix");
     shaderModelViewMatrixUniform = gl.getUniformLocation(shaderProgram, "modelViewMatrix");
 
@@ -120,18 +113,16 @@ function initShader(gl)
     }
 }
 
-function draw(gl, objs) 
-{
+function draw(gl, objs) {
     // clear the background (with black)
     gl.clearColor(0.1, 0.1, 0.1, 1.0);
     gl.enable(gl.DEPTH_TEST);
-    gl.clear(gl.COLOR_BUFFER_BIT  | gl.DEPTH_BUFFER_BIT);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // set the shader to use
     gl.useProgram(shaderProgram);
 
-    for(i = 0; i<objs.length; i++)
-    {
+    for (i = 0; i < objs.length; i++) {
         obj = objs[i];
         // connect up the shader parameters: vertex position, color and projection/model matrices
         // set up the buffers
@@ -140,7 +131,7 @@ function draw(gl, objs)
 
         gl.bindBuffer(gl.ARRAY_BUFFER, obj.colorBuffer);
         gl.vertexAttribPointer(shaderVertexColorAttribute, obj.colorSize, gl.FLOAT, false, 0, 0);
-        
+
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.indices);
 
         gl.uniformMatrix4fv(shaderProjectionMatrixUniform, false, projectionMatrix);
@@ -156,12 +147,11 @@ function draw(gl, objs)
     }
 }
 
-function run(gl, objs) 
-{
+function run(gl, objs) {
     // The window.requestAnimationFrame() method tells the browser that you wish to perform an animation and requests that the browser call a specified function to update an animation before the next repaint. The method takes a callback as an argument to be invoked before the repaint.
     requestAnimationFrame(function() { run(gl, objs); });
     draw(gl, objs);
 
-    for(i = 0; i<objs.length; i++)
+    for (i = 0; i < objs.length; i++)
         objs[i].update();
 }
