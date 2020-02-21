@@ -173,42 +173,68 @@ function draw(gl, obj)
 }
 
 // TO DO: Create functions needed to generate the vertex data for the different figures.
-function createSquare(gl) 
-{
-    var square = {};
-    return square;
-}
-
 function createTriangle(gl)
 {
     let vertexBuffer;
     vertexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-    let verts = [
-        0.0,  0.5,  0.0,
-        -.5,  -.5,  0.0,
-        .5, -.5,  0.0,
-        // 0, -1, 0
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
+    let verts= [
+        0.0, 1, 0.0,
+        .5, 0,  0.0,
+        -.5, 0,  0.0
     ];
-    // void gl.bufferData(target, ArrayBufferView srcData, usage, srcOffset, length);
-    // target = gl.ARRAY_BUFFER: Buffer containing vertex attributes, such as vertex coordinates, texture coordinate data, or vertex color data.
-    // srcData = This is a new data type introduced into web browsers for use with WebGL. Float32Array is a type of ArrayBuffer, also known as a typed array. This is a JavaScript type that stores compact binary data. 
-    // usage = A GLenum specifying the usage pattern of the data store. gl.STATIC_DRAW: Contents of the buffer are likely to be used often and not change often. Contents are written to the buffer, but not read.
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
-
-    // The resulting object contains the vertexbuffer, the size of the vertex structure (3 floats, x, y, z), the number of vertices to be drawn, the the primitive to draw.
-    let triangle = {buffer:vertexBuffer, vertSize:3, nVerts:3, primtype:gl.TRIANGLES};
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW)
+    let triangle = {buffer:vertexBuffer, vertSize:3, nVerts:3, primtype:gl.TRIANGLE_STRIP};
+    
     return triangle;
 }
 
-function createRhombus(gl)
+function createSquare(gl)
 {
-    var rhombus = {};
+    let vertexBuffer;
+    vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
+    let verts= [
+        0.5 , 0.5, 0.0,
+        0.5, -0.5,  0.0,
+        -.5, .5,  0.0,
+        -.5, -0.5, 0
+    ];
+
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW)
+    let square = {buffer:vertexBuffer, vertSize:3, nVerts:4, primtype:gl.TRIANGLE_STRIP};
+    return square;
+}
+
+function createRhombus(gl)
+{   
+    let vertexBuffer;
+    vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
+    let verts= [
+        0.0, 0.8, 0.0,
+        .5, 0.3,  0.0,
+        -.5, 0.3,  0.0,
+        0, -0.2, 0
+    ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW)
+    var rhombus = {buffer:vertexBuffer, vertSize:3, nVerts:4, primtype:gl.TRIANGLE_STRIP};
     return rhombus;
 }
 
 function createSphere(gl, radius)
-{
-    var sphere = {};
+{   let vertexBuffer;
+    vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
+    let points = 80;
+    let mouth = Math.PI / 6;
+    let degrees = (Math.PI-mouth) / points;
+    let verts= [0.0,0.0];
+    for (let i = 0;i < name; i++){
+        verts.push(Math.cos(2*degrees*i+mouth)*radius);
+        verts.push(Math.sin(2*degrees*i+mouth)*radius);
+    }
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW)
+    var sphere = {buffer:vertexBuffer, vertSize:2, nVerts:verts.length/2, primtype:gl.TRIANGLE_FAN};
     return sphere;
 }        
