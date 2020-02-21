@@ -226,15 +226,14 @@ function createSphere(gl, radius)
 {   let vertexBuffer;
     vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
-    let points = 80;
-    let mouth = Math.PI / 6;
-    let degrees = (Math.PI-mouth) / points;
-    let verts= [0.0,0.0];
-    for (let i = 0;i < name; i++){
-        verts.push(Math.cos(2*degrees*i+mouth)*radius);
-        verts.push(Math.sin(2*degrees*i+mouth)*radius);
+    let points = 90;
+    let verts= [0.0,0.3,0.0];
+    for (let i = 0;i < points; i++){
+        verts.push(radius*Math.cos(2*i*Math.PI/100));
+        verts.push(radius*Math.sin(2*i*Math.PI/100)+0.3);
+        verts.push(0.0)
     }
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW)
-    var sphere = {buffer:vertexBuffer, vertSize:2, nVerts:verts.length/2, primtype:gl.TRIANGLE_FAN};
+    var sphere = {buffer:vertexBuffer, vertSize:3, nVerts:verts.length/2, primtype:gl.TRIANGLE_FAN};
     return sphere;
 }        
