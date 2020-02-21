@@ -228,7 +228,7 @@ function createSphere(gl, radius)
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
     let points = 90;
     let verts= [0.0,0.3,0.0];
-    for (let i = 0;i < points; i++){
+    for (let i = 10;i < points; i++){
         verts.push(radius*Math.cos(2*i*Math.PI/100));
         verts.push(radius*Math.sin(2*i*Math.PI/100)+0.3);
         verts.push(0.0)
