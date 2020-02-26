@@ -15,10 +15,11 @@
                 var gl = initWebGL(canvas);
                 initViewport(gl, canvas);
                 initGL(canvas);
-                //var octahedron = createOctahedron(gl, [-3, 0, -2], [1, 1, 0]);
+                var octahedron = createOctahedron(gl, [5, 0, -12], [0, 1, 0]);
+                var pentaPyramid = createPentaPyramid(gl, [-8, -2, -16], [0.1, 1.0, 0.2]);
                 initShader(gl);
                 // TO DO: create and draw the figures
-                run(gl, []);
+                run(gl, [octahedron, pentaPyramid]);
             }
         );
     </script>
