@@ -210,8 +210,13 @@ function createPentaPyramid(gl, translation, rotationAxis) {
     //         vertexColors.push(...color);
     // }
     faceColors.forEach(color => {
-        for (let j = 0; j < 3; j++)
-            vertexColors.push(...color);
+        if (faceColors.indexOf(color) == 5) {
+            for (let j = 0; j < 5; j++)
+                vertexColors.push(...color);
+        } else {
+            for (let j = 0; j < 3; j++)
+                vertexColors.push(...color);
+        }
     });
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexColors), gl.STATIC_DRAW);
 
