@@ -65,6 +65,70 @@ function initGL(canvas) {
 }
 
 // TO DO: Create the functions for each of the figures.
+function createOctahedron(gl, translation, rotationAxis) {
+    let vertexBuffer;
+    vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+
+    let verts = [
+
+    ];
+
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
+    let colorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    let faceColors = [
+        [1.0, 0.0, 0.0, 1.0],
+        [0.0, 1.0, 0.0, 1.0],
+        [0.0, 0.0, 1.0, 1.0],
+        [1.0, 1.0, 0.0, 1.0],
+        [1.0, 0.0, 1.0, 1.0],
+        [0.0, 1.0, 1.0, 1.0],
+        [1.0, 0.0, 0.0, 1.0],
+        [0.0, 1.0, 0.0, 1.0]
+    ];
+    let vertexColors = [];
+    // for (const color of faceColors) 
+    // {
+    //     for (let j=0; j < 4; j++)
+    //         vertexColors.push(...color);
+    // }
+    faceColors.forEach(color => {
+        for (let j = 0; j < 4; j++)
+            vertexColors.push(...color);
+    });
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexColors), gl.STATIC_DRAW);
+
+    let octahedronIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, octahedronIndexBuffer);
+    let octahedronIndices = [
+
+    ];
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(octahedronIndices), gl.STATIC_DRAW);
+    let octahedron = {
+        buffer: vertexBuffer,
+        colorBuffer: colorBuffer,
+        indices: cubeIndexBuffer,
+        vertSize: 3,
+        nVerts: 24,
+        colorSize: 4,
+        nColors: 24,
+        nIndices: 24,
+        primtype: gl.TRIANGLES,
+        modelViewMatrix: mat4.create(),
+        currentTime: Date.now()
+    }
+    mat4.tanslate(octahedron.modelViewMatrix, octahedron.modelViewMatrix, translation);
+    octahedron.update = function() {
+        let now = Date.now();
+        let deltat = now - this.currentTime;
+        this.currentTime = now;
+        let fract = deltat / duration;
+        let angel = Math.PI * 2 * fract;
+        mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angel, rotationAxis);
+    };
+    return cube;
+}
 
 function createShader(gl, str, type) {
     var shader;
