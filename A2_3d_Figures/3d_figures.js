@@ -140,6 +140,7 @@ function createOctahedron(gl, translation, rotationAxis) {
         modelViewMatrix: mat4.create(),
         currentTime: Date.now()
     }
+    let flagPostion = Boolean;
     mat4.translate(octahedron.modelViewMatrix, octahedron.modelViewMatrix, translation);
     octahedron.update = function() {
         let now = Date.now();
@@ -147,17 +148,18 @@ function createOctahedron(gl, translation, rotationAxis) {
         this.currentTime = now;
         let fract = deltat / duration;
         let angel = Math.PI * 2 * fract;
-        // if (translation[1] > 2) {
-        //     translation[0] = 6;
-        //     translation[1] -= 1;
-        //     translation[2] = -12
-        // } else if (translation[1] < -2) {
-        //     translation[0] = 6;
-        //     translation[1] += 1;
-        //     translation[2] = -12
-        // }
-        // mat4.translate(this.modelViewMatrix, this.modelViewMatrix, translation);
         mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angel, rotationAxis);
+        if (flagPostion) {
+            mat4.translate(this.modelViewMatrix, this.modelViewMatrix, [0, 0.05, 0])
+            console.log(this.modelViewMatrix)
+        } else {
+            mat4.translate(this.modelViewMatrix, this.modelViewMatrix, [0, -0.05, 0])
+        }
+        if (this.modelViewMatrix[13] >= 2.5) {
+            flagPostion = false;
+        } else if (this.modelViewMatrix[13] <= -2.5) {
+            flagPostion = true;
+        }
     };
     return octahedron;
 }
@@ -246,7 +248,7 @@ function createPentaPyramid(gl, translation, rotationAxis) {
     return pentaPyramid;
 }
 
-function createDodecahedron(gl, translation, rotationAxis) {
+function createDodecahedron(gl, translation, rotationAxis, rotationAxis2) {
     let vertexBuffer;
     vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
@@ -346,6 +348,7 @@ function createDodecahedron(gl, translation, rotationAxis) {
         let fract = deltat / duration;
         let angel = Math.PI * 2 * fract;
         mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angel, rotationAxis);
+        mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angel, rotationAxis2)
     };
     return dodecahedron;
 }
