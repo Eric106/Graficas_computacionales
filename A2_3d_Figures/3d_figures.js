@@ -112,7 +112,7 @@ function createOctahedron(gl, translation, rotationAxis) {
         [1.0, 0.0, 1.0, 1.0],
         [0.0, 1.0, 1.0, 1.0],
         [1.0, 0.5, 0.0, 1.0],
-        [0.8, 1.0, 0.0, 1.0]
+        [0.0, 0.5, 0.5, 1.0]
     ];
     let vertexColors = [];
     // for (const color of faceColors) 
@@ -254,6 +254,138 @@ function createPentaPyramid(gl, translation, rotationAxis) {
         mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angel, rotationAxis);
     };
     return pentaPyramid;
+}
+
+function createDodecahedron(gl, translation, rotationAxis) {
+    let vertexBuffer;
+    vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+
+    let verts = [
+        //1 face front
+        0, 0.62, 1.62, -1, 1, 1, -0.62, 1.62, 0,
+        0.62, 1.62, 0,
+        1, 1, 1,
+        //2 face front
+        0, 0.62, 1.62,
+        1, 1, 1,
+        1.62, 0, 0.62,
+        1, -1, 1,
+        0, -0.62, 1.62,
+        //3 face front
+        0, -0.62, 1.62,
+        1, -1, 1,
+        0.62, -1.62, 0, -0.62, -1.62, 0, -1, -1, 1,
+        //4 face front
+        0, 0.62, 1.62, -1, 1, 1, -1.62, 0, 0.62, -1, -1, 1,
+        0, -0.62, 1.62,
+
+        //1 face back
+        0, 0.62, -1.62,
+        1, 1, -1,
+        0.62, 1.62, 0, -0.62, 1.62, 0, -1, 1, -1,
+        //2 face back
+        0, 0.62, -1.62, -1, 1, -1, -1.62, 0, -0.62, -1, -1, -1,
+        0, -0.64, -1.62,
+        //3 face back
+        0, -0.64, -1.62, -1, -1, -1, -0.62, -1.62, 0,
+        0.62, -1.62, 0,
+        1, -1, -1,
+        //4 face back
+        0, 0.62, -1.62,
+        0, -0.62, -1.62,
+        1, -1, -1,
+        1.62, 0, -0.62,
+        1, 1, -1,
+        //1 face rigth
+        0.62, 1.62, 0,
+        1, 1, -1,
+        1.62, 0, -0.62,
+        1.62, 0, 0.62,
+        1, 1, 1,
+        //2 face rigth
+        0.62, -1.62, 0,
+        1, -1, 1,
+        1.62, 0, 0.62,
+        1.62, 0, -0.62,
+        1, -1, -1,
+        //1 face left
+        -0.62, 1.62, 0, -1, 1, 1, -1.62, 0, 0.62, -1.62, 0, -0.62, -1, 1, -1,
+        //2 face left
+        -0.62, -1.62, 0, -1, -1, -1, -1.62, 0, -0.62, -1.62, 0, 0.62, -1, -1, 1
+
+    ];
+
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
+    let colorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    let faceColors = [
+        [1.0, 0.0, 0.0, 1.0],
+        [0.0, 0.0, 1.0, 1.0],
+        [1.0, 1.0, 0.0, 1.0],
+        [1.0, 0.0, 1.0, 1.0],
+        [0.0, 1.0, 1.0, 1.0],
+        [0.0, 1.0, 0.0, 1.0],
+        [1.0, 0.0, 0.0, 1.0],
+        [0.0, 0.0, 1.0, 1.0],
+        [1.0, 1.0, 0.0, 1.0],
+        [1.0, 0.0, 1.0, 1.0],
+        [0.0, 1.0, 0.5, 1.0],
+        [1.0, 1.0, 0.5, 1.0]
+    ];
+    let vertexColors = [];
+    // for (const color of faceColors) 
+    // {
+    //     for (let j=0; j < 4; j++)
+    //         vertexColors.push(...color);
+    // }
+    faceColors.forEach(color => {
+        for (let j = 0; j < 5; j++)
+            vertexColors.push(...color);
+    });
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexColors), gl.STATIC_DRAW);
+
+    let dodecahedronIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, dodecahedronIndexBuffer);
+    let dodecahedronIndices = [
+        0, 1, 2, 0, 2, 3, 0, 3, 4,
+        5, 6, 7, 5, 7, 8, 5, 8, 9,
+        10, 11, 12, 10, 12, 13, 10, 13, 14,
+        15, 16, 17, 15, 17, 18, 15, 18, 19,
+
+        20, 21, 22, 20, 22, 23, 20, 23, 24,
+        25, 26, 27, 25, 27, 28, 25, 28, 29,
+        30, 31, 32, 30, 32, 33, 30, 33, 34,
+        35, 36, 37, 35, 37, 38, 35, 38, 39,
+        40, 41, 42, 40, 42, 43, 40, 43, 44,
+        45, 46, 47, 45, 47, 48, 45, 48, 49,
+        50, 51, 52, 50, 52, 53, 50, 53, 54,
+        55, 56, 57, 55, 57, 58, 55, 58, 59
+    ];
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(dodecahedronIndices), gl.STATIC_DRAW);
+    let dodecahedron = {
+        buffer: vertexBuffer,
+        colorBuffer: colorBuffer,
+        indices: dodecahedronIndexBuffer,
+        vertSize: 3,
+        nVerts: 60,
+        colorSize: 4,
+        nColors: 60,
+        nIndices: 108,
+        primtype: gl.TRIANGLES,
+        modelViewMatrix: mat4.create(),
+        currentTime: Date.now()
+    }
+    mat4.translate(dodecahedron.modelViewMatrix, dodecahedron.modelViewMatrix, translation);
+    dodecahedron.update = function() {
+        let now = Date.now();
+        let deltat = now - this.currentTime;
+        this.currentTime = now;
+        let fract = deltat / duration;
+        let angel = Math.PI * 2 * fract;
+        mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angel, rotationAxis);
+    };
+    return dodecahedron;
 }
 
 function createShader(gl, str, type) {
