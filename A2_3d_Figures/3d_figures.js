@@ -147,6 +147,16 @@ function createOctahedron(gl, translation, rotationAxis) {
         this.currentTime = now;
         let fract = deltat / duration;
         let angel = Math.PI * 2 * fract;
+        // if (translation[1] > 2) {
+        //     translation[0] = 6;
+        //     translation[1] -= 1;
+        //     translation[2] = -12
+        // } else if (translation[1] < -2) {
+        //     translation[0] = 6;
+        //     translation[1] += 1;
+        //     translation[2] = -12
+        // }
+        // mat4.translate(this.modelViewMatrix, this.modelViewMatrix, translation);
         mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angel, rotationAxis);
     };
     return octahedron;
