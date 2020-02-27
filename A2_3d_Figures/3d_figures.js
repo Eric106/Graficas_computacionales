@@ -278,7 +278,6 @@ function createDodecahedron(gl, translation, rotationAxis, rotationAxis2) {
         -0.62, 1.62, 0, -1, 1, 1, -1.62, 0, 0.62, -1.62, 0, -0.62, -1, 1, -1,
         //2 face left
         -0.62, -1.62, 0, -1, -1, -1, -1.62, 0, -0.62, -1.62, 0, 0.62, -1, -1, 1
-
     ];
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
