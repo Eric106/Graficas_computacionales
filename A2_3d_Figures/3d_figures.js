@@ -346,8 +346,16 @@ function createDodecahedron(gl, translation, rotationAxis, rotationAxis2) {
         this.currentTime = now;
         let fract = deltat / duration;
         let angel = Math.PI * 2 * fract;
+        // let flagRotate = true;
+        // if (flagRotate) {
+        //     mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angel, rotationAxis);
+        //     flagRotate = false;
+        // } else {
+        //     mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angel, rotationAxis2);
+        //     flagRotate = true;
+        // }
         mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angel, rotationAxis);
-        mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angel, rotationAxis2)
+        mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angel, rotationAxis2);
     };
     return dodecahedron;
 }
