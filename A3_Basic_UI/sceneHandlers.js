@@ -1,10 +1,10 @@
-
 // An integer value, in pixels, indicating the X coordinate at which the mouse pointer was located when the event occurred. 
-let mouseDown = false, pageX = 0;
+let mouseDown = false, pageX = 0, pageY = 0;
 
-function rotateScene(deltax, group)
+function rotateScene(deltax, deltay, group)
 {
     group.rotation.y += deltax / 100;
+    group.rotation.x += deltay / 100;
     $("#rotation").html("rotation: 0," + group.rotation.y.toFixed(1) + ",0");
 }
 
@@ -23,8 +23,10 @@ function onMouseMove(evt, group)
     evt.preventDefault();
     
     let deltax = evt.pageX - pageX;
+    let deltay = evt.pageY - pageY;
     pageX = evt.pageX;
-    rotateScene(deltax, group);
+    pageY = evt.pageY;
+    rotateScene(deltax, deltay, group);
 }
 
 function onMouseDown(evt)
@@ -33,6 +35,7 @@ function onMouseDown(evt)
     
     mouseDown = true;
     pageX = evt.pageX;
+    pageY = evt.pageY;
 }
 
 function onMouseUp(evt)
