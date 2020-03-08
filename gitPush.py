@@ -12,6 +12,7 @@ def run_server():
         print(e)
         exit()
 def gitUpdate(dt_string):
+    system('git pull')
     #system('git init')
     system('git add -A')
     system('git commit -m '+'"'+dt_string+'"')
