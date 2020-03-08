@@ -3,7 +3,7 @@ from time import sleep
 
 def main():
     try:
-        system("python -m http.server 80 --bind 127.0.0.1")
+        system("sudo python3 -m http.server 80 --bind 127.0.0.1")
     except KeyboardInterrupt:
         print("Cerrando server")
         sleep(2)

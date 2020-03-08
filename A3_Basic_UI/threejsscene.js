@@ -54,7 +54,7 @@ function createScene(canvas) {
     scene = new THREE.Scene();
 
     // Set the background color 
-    scene.background = new THREE.Color(1, 1, 1);
+    scene.background = new THREE.Color(0.1, 0.1, 0.1);
     // scene.background = new THREE.Color( "rgb(100, 100, 100)" );
 
     // Add  a camera so we can view the scene
@@ -160,5 +160,5 @@ function addSatelite() {
 }
 
 function restart() {
-    mainGroup.remove(mainGroup.children)
+    mainGroup.children=[]
 }
