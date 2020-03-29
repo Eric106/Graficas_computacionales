@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - materials - shaders [lava]</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="../css/main.css">
+    
+    <script id="fragmentShader" type="x-shader/x-fragment">
+			uniform float time;
+
+			uniform float fogDensity;
+			uniform vec3 fogColor;
+
+			// Textura de transparencia
+			uniform sampler2D texture1;
+
+			// Textura de lava
+			uniform sampler2D texture2;
+
+			varying vec2 vUv;
+
+			void main( void ) {
+
+				// Calcula la posición del ruido en función al tiempo que le pasamos
+
+				vec4 noise = texture2D( texture1, vUv );
+				vec2 T1 = vUv + vec2(1.5,-1.5) * time * 0.02;
+				vec2 T2 = vUv + vec2( - 1.0, 0.0 ) * time * 0.02;
+				
+				T1.x += noise.b * 0.2;
+				T1.y += noise.g * 0.2;
+				
+				T2.x -= noise.r * 0.3;
+				T2.y += noise.b * 0.3;
+				
+				float alpha = texture2D(texture1, T1).a;
+				
+				// Obtiene las coordenadas de la textura en base a lo que se calculó con el ruido
+				vec4 color = texture2D( texture2, T2 );
+
+				// Crea un color utilizando la transparencia, y añadiendo el color más veces. Esto hace que se vea más oscuro en algunas zonas. Aquí puedes jugar para lograr que se vea más claro.
+				vec4 temp = color * (vec4(alpha,alpha,alpha,alpha)) + color ;
+				
+				if (temp.r > 1.5) temp.bg += clamp(temp.r - 0.7,0.1,0.5);
+				if(temp.g > 0.7) temp.rb += temp.r - 1.0;
+				if(temp.b > 1.0) temp.rg += temp.b - 0.5;
+				if(temp.r < 0.2) temp.rgb *= 1.1;
+				
+				gl_FragColor = temp * 1.9;
+			}
+		</script>
+
+		<script id="vertexShader" type="x-shader/x-vertex">
+			uniform vec2 uvScale;
+			varying vec2 vUv;
+
+			void main()
+			{
+				vUv = uvScale * uv;
+				vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+				gl_Position = projectionMatrix * mvPosition;
+			}
+    </script>
+    
+    <script src="../libs/jquery-3.4.1/jquery-3.4.1.min.js"></script>
+		<script src="../libs/jquery-ui/jquery-ui.js"></script>
+    <script src="../libs/three.js/three.min.js"></script>
+    <script src="sun_shader.js"></script>
+    
+    <script type="text/javascript">
+		
+			$(document).ready(
+					function() {						
+						init(document.getElementById("webglcanvas"));
+						render();
+					}
+			);
+
+		</script>
+	</head>
+	<body>
+
+		<div id="container">
+      <canvas id="webglcanvas"></canvas>
+    </div>
+
+
+	</body>
+</html>
