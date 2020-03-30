@@ -1,9 +1,12 @@
 var sunUniforms, sun;
 var mercury,venus,earth,mars,jupiter,saturn,uranus,neptune,pluto
 var moon, marsPhobos, marsDemios;
+var jupiterMoons = [], saturnMoons = [], uranusMoons = [], neptuneMoons = [], plutoMoons = [];
 var mercuryOrbit,venusOrbit,earthOrbit,marsOrbit,jupiterOrbit,saturnOrbit,uranusOrbit,neptuneOrbit,plutoOrbit;
-var saturnRing, uranusRing;
-var pointLight, moon, ring, controls, scene, camera, renderer, scene;
+var saturnRing1, saturnRing2, saturnRing3;
+var uranusRing1, uranusRing2, uranusRing3, uranusRing4, uranusRing5;
+var uranusRing, asterRing;
+var pointLight, controls, scene, camera, renderer, scene;
 var planetSegments = 48;
 var mercuryData = createPlanetData(88, 0.00993, 20, "mercury", "img/mercurymap.jpg", 0.5, planetSegments);
 var venusData = createPlanetData(225,0.00496,25,"venus","img/venusmap.jpg",0.7,planetSegments);
@@ -12,6 +15,36 @@ var moonData = createPlanetData(29.5, 0.01, 2.8, "moon", "img/moon.jpg", 0.2, pl
 var marsData = createPlanetData(687,0.0242, 35, "mars", "img/mars_1k_color.jpg", 0.8, planetSegments);
 var marsPhobosData = createPlanetData(29.5, 0.01, 2, "phobos", "img/phobosbump.jpg", 0.1, planetSegments);
 var marsDemiosData = createPlanetData(32, 0.03, 2.5, "demios", "img/deimosbump.jpg", 0.15, planetSegments);
+var jupiterData = createPlanetData(700,0.0125,53,"jupiter","img/jupitermap.jpg",4,planetSegments);
+var jupiterMoonsData = []
+for(let i = 29; i < 41; i+=0.5){
+    let tempData = createPlanetData(i, 0.03, 4.6, "jupiterMoon", "img/phobosbump.jpg", 0.15, planetSegments);
+    jupiterMoonsData.push(tempData)
+}
+var saturnData = createPlanetData(720,0.0125,65,"saturn","img/saturnmap.jpg",3.3,planetSegments);
+var saturnMoonsData = []
+for(let i = 29; i < 41; i+=0.5){
+    let tempData = createPlanetData(i, 0.03, 3.6, "saturnMoon", "img/deimosbump.jpg", 0.15, planetSegments);
+    saturnMoonsData.push(tempData)
+}
+var uranusData = createPlanetData(740, 0.012, 80, "uranus","img/uranusmap.jpg",2,planetSegments);
+var uranusMoonsData = []
+for(let i = 29; i < 37; i+=0.5){
+    let tempData = createPlanetData(i, 0.03, 2.6, "uranusMoon", "img/phobosbump.jpg", 0.1, planetSegments);
+    uranusMoonsData.push(tempData)
+}
+var neptuneData = createPlanetData(780,0.0115, 90, "neptune","img/neptunemap.jpg",1.8,planetSegments);
+var neptuneMoonsData = []
+for(let i = 29; i < 34; i+=0.5){
+    let tempData = createPlanetData(i, 0.03, 2, "neptuneMoon", "img/deimosbump.jpg", 0.1, planetSegments);
+    neptuneMoonsData.push(tempData)
+}
+var plutoData = createPlanetData(800, 0.01, 97, "pluto", "img/plutomap1k.jpg",0.4,planetSegments);
+var plutoMoonsData = []
+for(let i = 29; i < 32; i+=0.5){
+    let tempData = createPlanetData(i, 0.03, 0.5, "plutoMoon", "img/phobosbump.jpg", 0.05, planetSegments);
+    plutoMoonsData.push(tempData)
+}
 var orbitData = {value: 200, runOrbit: true, runRotation: true};
 var clock = new THREE.Clock();
 
@@ -66,14 +99,15 @@ function getRing(size, innerDiameter, facets, myColor, name, distanceFromAxis) {
  * @param {type} size decimal
  * @param {type} innerDiameter decimal
  * @param {type} facets integer
- * @param {type} myColor HTML color
+ * @param {type} myTexture HTML color
  * @param {type} name string
  * @param {type} distanceFromAxis decimal
  * @returns {THREE.Mesh|myRing}
  */
-function getAsterRing(size, innerDiameter, facets, myColor, name, distanceFromAxis) {
-    var ringGeometry = new THREE.TorusGeometry(size, innerDiameter, facets, facets);
-    var ringMaterial = new THREE.MeshBasicMaterial({color: myColor, side: THREE.DoubleSide});
+function getAsterRing(size, innerDiameter, facets, myTexture, name, distanceFromAxis) {
+    var ringGeometry = new THREE.RingGeometry(size, innerDiameter, facets, facets);
+    var texture = new THREE.TextureLoader().load(myTexture);
+    var ringMaterial = new THREE.MeshPhongMaterial({map: texture, side: THREE.DoubleSide,opacity:1.5,transparent: true});
     myRing = new THREE.Mesh(ringGeometry, ringMaterial);
     myRing.name = name;
     myRing.position.set(distanceFromAxis, 0, 0);
@@ -114,7 +148,7 @@ function getMaterial(type, color, myTexture) {
  * @returns {undefined}
  */
 function createVisibleOrbits() {
-    var orbitWidth = 0.05;
+    var orbitWidth = 0.1;
     mercuryOrbit = getRing(mercuryData.distanceFromAxis + orbitWidth
         , mercuryData.distanceFromAxis - orbitWidth
         , 320
@@ -139,6 +173,36 @@ function createVisibleOrbits() {
         , 0xffffff
         , "marsOrbit"
         , 0);
+    jupiterOrbit = getRing(jupiterData.distanceFromAxis + orbitWidth
+        , jupiterData.distanceFromAxis - orbitWidth
+        , 320
+        , 0xffffff
+        , "jupiterOrbit"
+        , 0);
+    saturnOrbit = getRing(saturnData.distanceFromAxis  + orbitWidth
+        , saturnData.distanceFromAxis - orbitWidth
+        , 320
+        , 0xffffff
+        , "saturnOrbit"
+        ,0);
+    uranusOrbit = getRing(uranusData.distanceFromAxis  + orbitWidth
+        , uranusData.distanceFromAxis - orbitWidth
+        , 320
+        , 0xffffff
+        , "uranusOrbit"
+        ,0);
+    neptuneOrbit = getRing(neptuneData.distanceFromAxis  + orbitWidth
+        , neptuneData.distanceFromAxis - orbitWidth
+        , 320
+        , 0xffffff
+        , "neptuneOrbit"
+        ,0);
+    plutoOrbit = getRing(plutoData.distanceFromAxis  + orbitWidth
+        , plutoData.distanceFromAxis - orbitWidth
+        , 320
+        , 0xffffff
+        , "plutoOrbit"
+        ,0);
 }
 
 /** 
@@ -170,7 +234,7 @@ function loadTexturedPlanet(myData, x, y, z, myMaterialType) {
     var passThisTexture;
 
     if (myData.texture && myData.texture !== "") {
-        passThisTexture = new THREE.ImageUtils.loadTexture(myData.texture);
+        passThisTexture = new THREE.TextureLoader().load(myData.texture);
     }
     if (myMaterialType) {
         myMaterial = getMaterial(myMaterialType, "rgb(255, 255, 255 )", passThisTexture);
@@ -226,7 +290,19 @@ function movePlanet(myPlanet, myData, myTime, stopRotation) {
                 * myData.distanceFromAxis;
     }
 }
-
+function moveRingPlanet(myPlanet, myData, myTime, stopRotation) {
+    if (orbitData.runRotation && !stopRotation) {
+        myPlanet.rotation.z += myData.rotationRate;
+    }
+    if (orbitData.runOrbit) {
+        myPlanet.position.x = Math.cos(myTime 
+                * (1.0 / (myData.orbitRate * orbitData.value)) + 10.0) 
+                * myData.distanceFromAxis;
+        myPlanet.position.z = Math.sin(myTime 
+                * (1.0 / (myData.orbitRate * orbitData.value)) + 10.0) 
+                * myData.distanceFromAxis;
+    }
+}
 /**
  * Move the moon around its orbit with the planet, and rotate it.
  * @param {type} myMoon
@@ -264,6 +340,35 @@ function update(renderer, scene, camera, controls) {
     movePlanet(mars,marsData, time);
     moveMoon(marsPhobos,mars,marsPhobosData,time);
     moveMoon(marsDemios,mars,marsDemiosData,time);
+    asterRing.rotation.z += 0.0024;
+    movePlanet(jupiter,jupiterData,time);
+    for(let i = 0; i < jupiterMoons.length;i++){
+        moveMoon(jupiterMoons[i],jupiter,jupiterMoonsData[i],time);
+    }
+    movePlanet(saturn,saturnData,time);
+    moveRingPlanet(saturnRing1,saturnData,time);
+    moveRingPlanet(saturnRing2,saturnData,time);
+    moveRingPlanet(saturnRing3,saturnData,time);
+    for(let i = 0; i < saturnMoons.length;i++){
+        moveMoon(saturnMoons[i],saturn,saturnMoonsData[i],time);
+    }
+    movePlanet(uranus,uranusData,time);
+    moveRingPlanet(uranusRing1,uranusData,time);
+    moveRingPlanet(uranusRing2,uranusData,time);
+    moveRingPlanet(uranusRing3,uranusData,time);
+    moveRingPlanet(uranusRing4,uranusData,time);
+    moveRingPlanet(uranusRing5,uranusData,time);
+    for(let i = 0; i < uranusMoons.length;i++){
+        moveMoon(uranusMoons[i],uranus,uranusMoonsData[i],time);
+    }
+    movePlanet(neptune,neptuneData,time);
+    for(let i = 0; i < neptuneMoons.length;i++){
+        moveMoon(neptuneMoons[i],neptune,neptuneMoonsData[i],time);
+    }
+    movePlanet(pluto,plutoData,time);
+    for(let i = 0; i < plutoMoons.length;i++){
+        moveMoon(plutoMoons[i],pluto,plutoMoonsData[i],time);
+    }
     var delta = 5 * clock.getDelta();
     sunUniforms[ "time" ].value += 0.2 * delta;
     renderer.render(scene, camera);
@@ -272,6 +377,9 @@ function update(renderer, scene, camera, controls) {
     });
 }
 
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+}
 /**
  * This is the function that starts everything.
  * @returns {THREE.Scene|scene}
@@ -284,9 +392,9 @@ function init() {
             1, // near clipping plane
             1000 // far clipping plane
             );
-    camera.position.z = 30;
-    camera.position.x = -30;
-    camera.position.y = 30;
+    camera.position.z = 100;
+    camera.position.x = -70;
+    camera.position.y = 70;
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     // Create the scene that holds all of the visible objects.
@@ -369,10 +477,48 @@ function init() {
     mars = loadTexturedPlanet(marsData,marsData.distanceFromAxis,0,0);
     marsPhobos = loadTexturedPlanet(marsPhobosData,marsPhobosData.distanceFromAxis,-1,0);
     marsDemios = loadTexturedPlanet(marsDemiosData,marsDemiosData.distanceFromAxis,1,0);
+    asterRing = getAsterRing(40, 45, 480, 'img/asterRing.png','asterRing',0);
+    jupiter = loadTexturedPlanet(jupiterData,jupiterData.distanceFromAxis,0,0);
+    for(let i = 0; i < jupiterMoonsData.length;i++){
+        let jupMoonY = getRandomArbitrary(-jupiterMoonsData[i].distanceFromAxis,jupiterMoonsData[i].distanceFromAxis)
+        let jupMoon = loadTexturedPlanet(jupiterMoonsData[i],jupiterMoonsData[i].distanceFromAxis,jupMoonY,0);
+        jupiterMoons.push(jupMoon);
+    }
+    saturn = loadTexturedPlanet(saturnData,saturnData.distanceFromAxis,0,0);
+    saturnRing1 = getRing(7.55,8, 480, 0xADAA91 , "saturnRing1",saturnData.distanceFromAxis);
+    saturnRing2 = getRing(4.8,7.5,480, 0x88866F, "saturnRing2",saturnData.distanceFromAxis);
+    saturnRing3 = getRing(4,4.5,480, 0x474746, "saturnRing3",saturnData.distanceFromAxis);
+    for(let i = 0; i < saturnMoonsData.length;i++){
+        let satMoonY = getRandomArbitrary(-saturnMoonsData[i].distanceFromAxis,saturnMoonsData[i].distanceFromAxis)
+        let satMoon = loadTexturedPlanet(saturnMoonsData[i],saturnMoonsData[i].distanceFromAxis,satMoonY,0);
+        saturnMoons.push(satMoon);
+    }
+    uranus = loadTexturedPlanet(uranusData,uranusData.distanceFromAxis,0,0);
+    uranusRing1 = getRing(2.4,2.5,480,0x000F1E,"uranusRing1",uranusData.distanceFromAxis);
+    uranusRing2 = getRing(3,3.05,480,0x869BAD,"uranusRing2",uranusData.distanceFromAxis);
+    uranusRing3 = getRing(3.1,3.15,480,0xAAB7C2, "uranusRing3",uranusData.distanceFromAxis);
+    uranusRing4 = getRing(3.2,3.25,480,0xC9D2DA, "uranusRing4",uranusData.distanceFromAxis);
+    uranusRing5 = getRing(3.3,3.35,480,0xD9DCDF, "uranusRing5",uranusData.distanceFromAxis);
+    for(let i = 0; i < uranusMoonsData.length;i++){
+        let uraMoonY = getRandomArbitrary(-uranusMoonsData[i].distanceFromAxis,uranusMoonsData[i].distanceFromAxis)
+        let uraMoon = loadTexturedPlanet(uranusMoonsData[i],uranusMoonsData[i].distanceFromAxis,uraMoonY,0);
+        uranusMoons.push(uraMoon);
+    }
+    neptune = loadTexturedPlanet(neptuneData,neptuneData.distanceFromAxis,0,0);
+    for(let i = 0; i < neptuneMoonsData.length;i++){
+        let nepMoonY = getRandomArbitrary(-neptuneMoonsData[i].distanceFromAxis,neptuneMoonsData[i].distanceFromAxis)
+        let nepMoon = loadTexturedPlanet(neptuneMoonsData[i],neptuneMoonsData[i].distanceFromAxis,nepMoonY,0);
+        neptuneMoons.push(nepMoon);
+    }
+    pluto = loadTexturedPlanet(plutoData,plutoData.distanceFromAxis,0,0);
+    for(let i = 0; i < plutoMoonsData.length;i++){
+        let pluMoonY = getRandomArbitrary(-plutoMoonsData[i].distanceFromAxis,plutoMoonsData[i].distanceFromAxis)
+        let pluMoon = loadTexturedPlanet(plutoMoonsData[i],plutoMoonsData[i].distanceFromAxis,pluMoonY,0);
+        plutoMoons.push(pluMoon);
+    }
     //ring = getRing(1.8, 0.05, 480, 0x757064, "ring", earthData.distanceFromAxis);
     // Create the visible orbit that the Earth uses.
     createVisibleOrbits();
-
     // Create the GUI that displays controls.
     var gui = new dat.GUI();
     var folder1 = gui.addFolder('light');
