@@ -183,7 +183,7 @@ function createScene(canvas) {
 
     // Add  a camera so we can view the scene
     camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 1500 )
-    camera.position.set(0, 300, 1150)
+    camera.position.set(0, 300, 1200)
     camera.lookAt(scene.position)
     scene.add(camera)
 
