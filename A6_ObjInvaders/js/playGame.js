@@ -31,9 +31,9 @@ function deadAnimation(robot) {
                     keys:[0, .33, .66, 1],
                     values:[
                         {  y : 250, z : -200 },
-                        {  y : 500, z : -400 },
-                        {  y : 750, z : -600 },
-                        {  y :1000, z : -800 },
+                        {  y : 500, z : -800 },
+                        {  y : 750, z : -1200 },
+                        {  y :1000, z : -140 },
                     ],
                     target: robot.position
                 },
@@ -183,7 +183,7 @@ function createScene(canvas) {
 
     // Add  a camera so we can view the scene
     camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 1500 )
-    camera.position.set(0, 300, 1200)
+    camera.position.set(0, 300, 1150)
     camera.lookAt(scene.position)
     scene.add(camera)
 
