@@ -6,8 +6,8 @@ def run_server():
     try:
         #system("git pull")
         now = datetime.now()
-        #dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-        dt_string = "08/05/2020 23:38:04"
+        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+        #dt_string = "08/05/2020 23:38:04"
         gitUpdate(dt_string)
     except Exception as e:
         print(e)
