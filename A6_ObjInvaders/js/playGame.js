@@ -30,10 +30,10 @@ function deadAnimation(robot) {
                 {
                     keys:[0, .33, .66, 1],
                     values:[
-                        {  y : 250 },
-                        {  y : 500 },
-                        {  y : 750},
-                        {  y :1000 },
+                        {  y : 250, z : -200 },
+                        {  y : 500, z : -400 },
+                        {  y : 750, z : -600 },
+                        {  y :1000, z : -800 },
                     ],
                     target: robot.position
                 },
@@ -96,7 +96,7 @@ async function animate() {
     for(let robo of robots) {
         if(robo.state === "running"){
             robo.mixer.update(deltat * 0.002)
-            robo.position.z += 0.5 * deltat
+            robo.position.z += 0.4 * deltat
         }
 
         if (robo.position.z > 600) {
@@ -207,7 +207,7 @@ function createScene(canvas) {
 
     //load objects
     loadManyGLTF()
-    setInterval(loadManyGLTF,30000)
+    setInterval(loadManyGLTF,35000)
 
     // Create a group to hold the objects
     group = new THREE.Object3D
