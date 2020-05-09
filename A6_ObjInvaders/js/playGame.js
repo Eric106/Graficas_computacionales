@@ -129,7 +129,7 @@ function render() {
 }
 
 function countdown() {
-    var seconds = 120
+    var seconds = 121
     function tick() {
         var counter = document.getElementById("counter")
         seconds--
@@ -147,7 +147,7 @@ function restart() {
     if (confirm("Do you want to restart the game?")) {
         location.reload()
     } else {
-        window.location.href = "Menu.html"
+        window.location.href = "index.html"
     }
 }
 
